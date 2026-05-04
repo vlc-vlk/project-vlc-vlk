@@ -1,62 +1,57 @@
-# Your Project Name
+# SecuriGate : Système de Contrôle d'Accès Intelligent 
 
-| | |
-|-|-|
-|`Author` | Your full name
+## Description du Projet
+**SecuriGate** est un système de contrôle d'accès intelligent et performant, optimisé par l'utilisation du microcontrôleur **Raspberry Pi Pico 2W**. Ce projet intègre plusieurs protocoles de communication pour gérer de manière fluide et sécurisée l'accès à un espace dédié.
 
-## Description
+Le système utilise un lecteur **RFID RC522** via l'interface SPI pour l'authentification des badges. L'interface locale est assurée par un **écran LCD 1602 avec adaptateur I2C**, affichant l'état du système en temps réel. Pour une utilisation nocturne, une **photorésistance** mesure la luminosité ambiante et active progressivement une **LED** via un signal PWM lorsque la luminosité baisse.
 
-## Motivation
+Conformément aux recommandations pédagogiques, le projet abandonne les modules Bluetooth externes au profit du **Wi-Fi et du Bluetooth (BLE) intégrés** au Pico 2W. Cette architecture permet d'utiliser un ordinateur local comme serveur, où le téléphone se connecte pour récupérer les données et permettre un déverrouillage à distance sécurisé.
 
-## Architecture
+---
 
-### Block diagram
+## Fonctionnalités Clés
+*   **Autentificare RFID :** Lecture sécurisée des badges via le protocole SPI.
+*   **Connectivité Sans Fil Native :** Utilisation du Wi-Fi et du BLE intégrés pour la télémétrie et le contrôle sans modules additionnels.
+*   **Interface I2C :** Affichage des messages sur écran LCD en utilisant un nombre réduit de broches.
+*   **Sortie d'Urgence :** Un bouton-poussoir déclenche une interruption matérielle pour une ouverture immédiate.
+*   **Automatisation du Verrouillage :** Un timer referme automatiquement le servomoteur après cinq secondes.
+*   **Gestion de la Lumière :** Contrôle adaptatif de la LED de courtoisie basé sur les données du convertisseur analogique-numérique (ADC).
 
-<!-- Make sure the path to the picture is correct -->
-![Block Diagram](schematics/block_diagram.png)
+---
 
-### Schematic
+## Liste des Composants et Coûts Estimés (Roumanie)
 
-![Schematic](schematics/kicad_schematic.png)
+| Composant | Description / Rôle | Prix Estimé (RON) |
+| :--- | :--- | :--- |
+| **Raspberry Pi Pico 2W** | Microcontrôleur Dual-Core avec Wi-Fi/BLE intégré | 45 - 60 RON |
+| **Lecteur RFID RC522** | Module de lecture avec badge et carte (SPI) | 15 - 25 RON |
+| **Écran LCD 1602 + I2C** | Affichage des messages (SDA/SCL) | 25 - 35 RON |
+| **Micro servomoteur SG90** | Actionneur pour le mécanisme de verrouillage | 12 - 18 RON |
+| **Photorésistance (LDR)** | Capteur de luminosité ambiante (ADC) | ~2 RON |
+| **LED & Bouton-poussoir** | Indicateur visuel et bouton d'urgence (Interrupt) | ~3 RON |
+| **Accessoires** | Breadboard, câbles de liaison, résistances | 15 - 20 RON |
 
-### Components
+**TOTAL ESTIMÉ : 117 - 163 RON**
 
+> **Note :** L'utilisation du Pico 2W permet une économie d'environ 40 RON par rapport à une solution avec module Bluetooth externe.
 
-<!-- This is just an example, fill in with your actual components -->
+---
 
-| Device | Usage | Price |
-|--------|--------|-------|
-| Activ Buzzer | Buzzer | [1.5 RON](https://www.optimusdigital.ro/ro/audio-buzzere/635-buzzer-activ-de-3-v.html?search_query=buzzer&results=61) |
-| Push Button | Button | [1 RON](https://www.optimusdigital.ro/ro/butoane-i-comutatoare/1119-buton-6x6x6.html?search_query=buton&results=222) |
-| Jumper Wires | Connecting components | [7 RON](https://www.optimusdigital.ro/ro/fire-fire-mufate/884-set-fire-tata-tata-40p-10-cm.html?search_query=set+fire&results=110) |
-| Breadboard | Project board | [10 RON](https://www.optimusdigital.ro/ro/prototipare-breadboard-uri/8-breadboard-830-points.html?search_query=breadboard&results=145) |
+## Architecture Software et Librairies
 
-### Libraries
+### 1. Environnement de Développement
+*   **Thonny IDE :** Utilisé pour le développement et l'upload du cod en MicroPython.
+*   **Firmware :** MicroPython UF2 pour Raspberry Pi Pico 2 (RP2350).
 
-<!-- This is just an example, fill in the table with your actual components -->
+### 2. Librairies MicroPython (Côté Client - Pico)
+*   `mfrc522.py` : Gestion du module RFID via SPI.
+*   `pico_i2c_lcd.py` : Pilote pour l'écran LCD 1602 via le protocole I2C.
+*   `machine` : Bibliothèque native pour le contrôle des GPIO, PWM, ADC et Timers.
+*   `network` & `ubluetooth` : Protocoles pour la communication avec le serveur local.
 
-| Library | Description | Usage |
-|---------|-------------|-------|
-| [lib-name1](link-to-lib) | official description of the lib | Used for accesing the peripherals of the microcontroller  |
-| [lib-name2](link-to-lib) | official description of the lib | Used for accesing the peripherals of the microcontroller  |
+### 3. Architecture Serveur (Côté PC)
+*   **Python 3.x :** Script serveur pentru centralizarea log-urilor de acces.
+*   **Bleak :** Bibliothèque Python pour la communication BLE entre le PC et le Pico 2W.
 
-## Log
-
-<!-- write every week your progress here -->
-
-### Week 6 - 12 May
-
-### Week 7 - 19 May
-
-### Week 20 - 26 May
-
-
-## Reference links
-
-<!-- Fill in with appropriate links and link titles -->
-
-[Tutorial 1](https://www.youtube.com/watch?v=wdgULBpRoXk&t=1s&ab_channel=BenEater)
-
-[Article 1](https://www.explainthatstuff.com/induction-motors.html)
-
-[Link title](https://projecthub.arduino.cc/)
+---
+<p align="center">Projet développé dans le cadre du Laboratoire de Systèmes Embarqués.</p>
